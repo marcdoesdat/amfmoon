@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import QuizHeader from '../components/QuizHeader.astro';
+import ProgressBar from '../components/ProgressBar.astro';
+import StatsRow from '../components/StatsRow.astro';
+import FilterBar from '../components/FilterBar.astro';
+import FinalScreen from '../components/FinalScreen.astro';
+---
+
+<BaseLayout>
+  <QuizHeader />
+  <ProgressBar />
+
+  <main>
+    <StatsRow />
+    <FilterBar />
+
+    <div id="quizContainer"></div>
+
+    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+      <button class="load-btn" id="loadMoreBtn">Charger plus de questions ▼</button>
+      <button class="reset-btn" id="resetBtn">Réinitialiser le quiz</button>
+    </div>
+
+    <FinalScreen />
+  </main>
+
+  <script>
+    import '../scripts/quiz.js';
+  </script>
+</BaseLayout>
