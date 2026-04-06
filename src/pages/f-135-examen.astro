@@ -1,0 +1,473 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProgressBar from '../components/ProgressBar.astro';
+---
+
+<BaseLayout
+  title="QuizAssurance – F-135 Simulation d'examen"
+  description="QuizAssurance · Simulation chronometree F-135 avec 50 questions courtes et 50 mises en situation."
+>
+  <header class="exam-header">
+    <div class="exam-header-left">
+      <a href="/" class="exam-back-link">Retour aux modules</a>
+      <h1>QuizAssurance · Simulation F-135</h1>
+      <p>100 questions · 50 courtes · 50 mises en situation · minuterie active</p>
+    </div>
+    <div class="exam-header-actions">
+      <a href="/quiz" class="exam-ghost-link">Mode entrainement</a>
+      <div class="timer-pill" id="examTimer">90:00</div>
+    </div>
+  </header>
+
+  <ProgressBar />
+
+  <main class="exam-main">
+    <section class="exam-intro" id="examIntro">
+      <div class="intro-card">
+        <p class="intro-eyebrow">Simulation officielle du site</p>
+        <h2>F-135 · Droit de l'assurance</h2>
+        <p class="intro-copy">
+          Cette simulation melange 50 questions courtes et 50 mises en situation.
+          Les reponses sont verrouillees lors de la validation et la correction complete
+          apparait a la fin de l'examen ou a l'expiration du temps.
+        </p>
+
+        <div class="intro-stats">
+          <div class="intro-stat">
+            <strong>100</strong>
+            <span>questions</span>
+          </div>
+          <div class="intro-stat">
+            <strong>50 / 50</strong>
+            <span>formats</span>
+          </div>
+          <div class="intro-stat">
+            <strong>90 min</strong>
+            <span>minuterie</span>
+          </div>
+        </div>
+
+        <button class="start-exam-btn" id="startExamBtn">Commencer la simulation</button>
+      </div>
+    </section>
+
+    <section class="exam-shell" id="examShell" style="display:none">
+      <div class="exam-dashboard">
+        <div class="exam-stat-card">
+          <div class="exam-stat-num" id="statAnswered">0</div>
+          <div class="exam-stat-label">Repondues</div>
+        </div>
+        <div class="exam-stat-card">
+          <div class="exam-stat-num green" id="statCorrect">0</div>
+          <div class="exam-stat-label">Correctes</div>
+        </div>
+        <div class="exam-stat-card">
+          <div class="exam-stat-num red" id="statWrong">0</div>
+          <div class="exam-stat-label">Incorrectes</div>
+        </div>
+        <div class="exam-stat-card">
+          <div class="exam-stat-num gold" id="statRemaining">100</div>
+          <div class="exam-stat-label">Restantes</div>
+        </div>
+      </div>
+
+      <div class="exam-toolbar">
+        <div class="exam-position" id="questionPosition">Question 1 sur 100</div>
+        <button class="finish-exam-btn" id="finishExamBtn">Terminer l'examen</button>
+      </div>
+
+      <div id="examQuestionCard"></div>
+
+      <div class="exam-nav">
+        <button class="exam-nav-btn secondary" id="prevBtn">Question precedente</button>
+        <button class="exam-nav-btn" id="nextBtn">Question suivante</button>
+      </div>
+    </section>
+
+    <section class="exam-results" id="examResults" style="display:none">
+      <div class="results-hero">
+        <div class="results-medal" id="resultsMedal">🏁</div>
+        <div class="results-score" id="resultsScore">0%</div>
+        <p class="results-message" id="resultsMessage"></p>
+      </div>
+
+      <div class="results-summary">
+        <div class="summary-card">
+          <strong id="summaryCorrect">0</strong>
+          <span>correctes</span>
+        </div>
+        <div class="summary-card">
+          <strong id="summaryWrong">0</strong>
+          <span>incorrectes</span>
+        </div>
+        <div class="summary-card">
+          <strong id="summaryBlank">0</strong>
+          <span>non repondues</span>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button class="start-exam-btn" id="restartExamBtn">Recommencer la simulation</button>
+        <a href="/quiz" class="exam-ghost-link results-link">Retour au mode entrainement</a>
+      </div>
+
+      <div class="review-list" id="reviewList"></div>
+    </section>
+  </main>
+
+  <script>
+    import '../scripts/f135-exam.js';
+  </script>
+</BaseLayout>
+
+<style>
+  .exam-header {
+    background: var(--navy);
+    padding: 24px 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 110;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .exam-back-link,
+  .exam-ghost-link {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .exam-back-link:hover,
+  .exam-ghost-link:hover { color: var(--gold); }
+  .exam-header-left h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 1.45rem;
+    margin-top: 8px;
+  }
+  .exam-header-left p {
+    color: #9aa7b5;
+    font-size: 0.82rem;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .exam-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .timer-pill {
+    min-width: 104px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(201,168,76,0.22);
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+  .timer-pill.warning {
+    color: #ffdd8c;
+    border-color: rgba(255,221,140,0.45);
+  }
+  .timer-pill.danger {
+    color: #ff9f9f;
+    border-color: rgba(255,159,159,0.45);
+  }
+
+  .exam-main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+  .intro-card,
+  .results-hero {
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(13,27,42,0.08);
+    padding: 40px;
+    text-align: center;
+  }
+  .intro-eyebrow {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .intro-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+  .intro-copy {
+    max-width: 640px;
+    margin: 0 auto;
+    color: var(--gray);
+    line-height: 1.7;
+    font-size: 0.97rem;
+  }
+  .intro-stats,
+  .results-summary,
+  .exam-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .exam-dashboard {
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 0;
+    margin-bottom: 22px;
+  }
+  .intro-stat,
+  .summary-card,
+  .exam-stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .intro-stat strong,
+  .summary-card strong,
+  .exam-stat-num {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--navy);
+  }
+  .exam-stat-num.green { color: var(--correct); }
+  .exam-stat-num.red { color: var(--wrong); }
+  .exam-stat-num.gold { color: var(--gold); }
+  .intro-stat span,
+  .summary-card span,
+  .exam-stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray);
+    margin-top: 6px;
+    display: block;
+  }
+  .start-exam-btn,
+  .exam-nav-btn,
+  .finish-exam-btn {
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .start-exam-btn,
+  .exam-nav-btn,
+  .finish-exam-btn {
+    background: var(--navy);
+    color: var(--gold);
+    border-radius: 999px;
+  }
+  .start-exam-btn {
+    padding: 16px 28px;
+    font-size: 1rem;
+    margin-top: 28px;
+  }
+  .start-exam-btn:hover,
+  .exam-nav-btn:hover,
+  .finish-exam-btn:hover { background: var(--blue); }
+  .exam-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .exam-position {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .finish-exam-btn {
+    padding: 12px 18px;
+    font-size: 0.88rem;
+  }
+  .exam-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .exam-nav-btn {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
+  .exam-nav-btn.secondary {
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--border);
+  }
+  .exam-nav-btn.secondary:hover { background: #f5f7fa; }
+  .exam-nav-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .exam-question-card .q-meta {
+    margin-bottom: 12px;
+  }
+  .question-kind-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .question-kind-badge,
+  .answer-state-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    padding: 5px 10px;
+  }
+  .question-kind-badge {
+    background: rgba(13,27,42,0.08);
+    color: var(--navy);
+  }
+  .question-kind-badge.scenario {
+    background: rgba(201,168,76,0.14);
+    color: #8a6d20;
+  }
+  .answer-state-badge {
+    background: rgba(45,122,79,0.14);
+    color: var(--correct);
+  }
+  .answer-state-badge.pending {
+    background: rgba(13,27,42,0.08);
+    color: var(--gray);
+  }
+  .case-study {
+    background: #f7f3ea;
+    border: 1px solid #eadfc4;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 22px;
+  }
+  .case-study-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8a6d20;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .case-study p {
+    line-height: 1.7;
+    color: var(--blue);
+  }
+  .exam-note {
+    margin-top: 14px;
+    font-size: 0.84rem;
+    color: var(--gray);
+  }
+  .results-hero {
+    margin-top: 10px;
+  }
+  .results-medal {
+    font-size: 4rem;
+    margin-bottom: 16px;
+  }
+  .results-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    color: var(--gold);
+  }
+  .results-message {
+    margin-top: 12px;
+    color: var(--gray);
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+  .results-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 24px 0 32px;
+    flex-wrap: wrap;
+  }
+  .results-link {
+    color: var(--navy);
+  }
+  .review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .review-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  }
+  .review-card.unanswered {
+    border-color: #d6c48d;
+  }
+  .review-answer-line {
+    margin: 14px 0 0;
+    font-size: 0.86rem;
+    color: var(--gray);
+  }
+
+  @media (max-width: 760px) {
+    .exam-header {
+      flex-direction: column;
+      padding: 20px;
+    }
+    .exam-header-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .intro-stats,
+    .results-summary,
+    .exam-dashboard {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .exam-toolbar,
+    .exam-nav {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .exam-main {
+      padding: 24px 14px 60px;
+    }
+    .intro-card,
+    .results-hero,
+    .review-card {
+      padding: 22px 18px;
+    }
+    .intro-stats,
+    .results-summary,
+    .exam-dashboard {
+      grid-template-columns: 1fr 1fr;
+    }
+    .timer-pill {
+      min-width: 92px;
+      font-size: 1rem;
+    }
+  }
+</style>

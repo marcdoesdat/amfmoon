@@ -3,7 +3,8 @@ import { ALL_QUESTIONS } from '../data/questions.js';
 // STATE
 let questions = [...ALL_QUESTIONS];
 let visibleCount = 15;
-let answered = {};
+let answered = {};  // { qid: true|false }  – validated answers
+let selected = {};  // { qid: chosenIndex } – pending selection, not yet validated
 let currentFilter = 'all';
 
 function getStats() {
@@ -59,12 +60,20 @@ function renderQuestions() {
           if (answered[q.id] !== undefined) {
             if (i === q.ans) cls = ' correct';
             else if (answered[q.id] === false && i !== q.ans) cls = ' wrong';
+          } else if (selected[q.id] === i) {
+            cls = ' selected';
           }
-          return `<button class="option-btn${cls}" onclick="answer(${q.id}, ${i})" ${answered[q.id] !== undefined ? 'disabled' : ''}>
+          const isDisabled = answered[q.id] !== undefined;
+          return `<button class="option-btn${cls}" onclick="selectOption(${q.id}, ${i})" ${isDisabled ? 'disabled' : ''}>
             <span class="option-letter">${letters[i]}.</span>
             <span>${opt}</span>
           </button>`;
         }).join('')}
+      </div>
+      <div class="validate-wrap">
+        <button class="validate-btn" id="validate-${q.id}" onclick="validateAnswer(${q.id})" ${answered[q.id] !== undefined ? 'disabled style="display:none"' : selected[q.id] === undefined ? 'disabled' : ''}>
+          Valider la réponse
+        </button>
       </div>
       <div class="explanation ${answered[q.id] !== undefined ? 'visible' : ''}" id="expl-${q.id}">
         <strong>${answered[q.id] === true ? '✓ Bonne réponse!' : answered[q.id] === false ? '✗ Réponse incorrecte.' : ''}</strong> ${q.expl}
@@ -95,10 +104,30 @@ function renderQuestions() {
   if (Object.keys(answered).length === 100) showFinalScreen();
 }
 
-window.answer = function(qid, chosen) {
+// Step 1: select an option (no reveal yet)
+window.selectOption = function(qid, chosen) {
+  if (answered[qid] !== undefined) return;
+  selected[qid] = chosen;
+  // Update option buttons without full re-render
+  const optsContainer = document.getElementById('opts-' + qid);
+  if (optsContainer) {
+    optsContainer.querySelectorAll('.option-btn').forEach((btn, i) => {
+      btn.classList.toggle('selected', i === chosen);
+    });
+  }
+  // Enable the validate button
+  const validateBtn = document.getElementById('validate-' + qid);
+  if (validateBtn) validateBtn.disabled = false;
+};
+
+// Step 2: validate and reveal the answer
+window.validateAnswer = function(qid) {
   const q = questions.find(x => x.id === qid);
   if (!q || answered[qid] !== undefined) return;
+  const chosen = selected[qid];
+  if (chosen === undefined) return;
   answered[qid] = chosen === q.ans;
+  delete selected[qid];
   updateStats();
   renderQuestions();
   const card = document.getElementById('card-' + qid);
@@ -129,6 +158,7 @@ function showFinalScreen() {
 
 window.resetAll = function() {
   answered = {};
+  selected = {};
   visibleCount = 15;
   document.getElementById('finalScreen').classList.remove('visible');
   updateStats();

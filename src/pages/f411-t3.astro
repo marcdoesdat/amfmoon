@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="QuizAssurance – F411-T3 / F511-T3"
+  description="QuizAssurance · Preparation pour le cours F411-T3/F511-T3 – Assurance de biens, RC des particuliers et expert en sinistre."
+>
+  <div class="construction-page">
+
+    <nav class="top-nav">
+      <a href="/" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 5-7 7 7 7"/></svg>
+        Retour aux modules
+      </a>
+    </nav>
+
+    <div class="content">
+      <p class="eyebrow">Cours F411-T3 / F511-T3</p>
+      <h1>Assurance de biens et RC<br /><span class="gold">des particuliers –<br />Expert en sinistre</span></h1>
+      <p class="subtitle">Agent et courtier en assurance de dommages · Expert en sinistre</p>
+
+      <div class="status-card">
+        <div class="status-icon">🔨</div>
+        <div class="status-text">
+          <strong>Module en construction</strong>
+          <p>Les 100 questions de ce module seront disponibles prochainement.</p>
+        </div>
+      </div>
+
+      <div class="topics-preview">
+        <p class="topics-label">Thèmes prévus</p>
+        <div class="topics-grid">
+          <span>Expertise en sinistre</span>
+          <span>Évaluation des dommages</span>
+          <span>RC des particuliers</span>
+          <span>Rapport d'expertise</span>
+          <span>Règlement de sinistres</span>
+          <span>Assurance habitation</span>
+        </div>
+      </div>
+
+      <a href="/" class="back-btn">← Voir tous les modules</a>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .construction-page {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+  }
+  .top-nav {
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--gold); }
+
+  .content {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 80px 32px 80px;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .gold { color: var(--gold); }
+  .subtitle {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 48px;
+  }
+
+  .status-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 24px 28px;
+    text-align: left;
+    margin-bottom: 36px;
+  }
+  .status-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .status-text strong {
+    display: block;
+    color: var(--white);
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+  .status-text p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .topics-preview { margin-bottom: 48px; }
+  .topics-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 14px;
+  }
+  .topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .topics-grid span {
+    font-size: 0.78rem;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.35);
+  }
+
+  .back-btn {
+    display: inline-block;
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 12px 24px;
+    border-radius: 50px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .back-btn:hover {
+    background: rgba(201,168,76,0.08);
+    border-color: var(--gold);
+  }
+
+  @media (max-width: 500px) {
+    .top-nav { padding: 16px 20px; }
+    .content { padding: 48px 20px 60px; }
+  }
+</style>

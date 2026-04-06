@@ -237,10 +237,34 @@ main {
 }
 .option-btn:hover:not(:disabled) { border-color: var(--navy); background: #f0f4f8; }
 .option-btn:disabled { cursor: default; }
+.option-btn.selected { border-color: var(--navy); background: #eef2f7; font-weight: 600; }
+.option-btn.selected .option-letter { color: var(--navy); }
 .option-btn.correct { background: var(--correct-bg); border-color: var(--correct); color: var(--correct); font-weight: 600; }
 .option-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong); color: var(--wrong); font-weight: 500; }
 .option-btn.correct .option-letter { color: var(--correct); }
 .option-btn.wrong .option-letter { color: var(--wrong); }
+
+/* VALIDATE BUTTON */
+.validate-wrap {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.validate-btn {
+  width: 100%;
+  padding: 13px 20px;
+  background: var(--navy);
+  color: var(--gold);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, opacity 0.2s;
+}
+.validate-btn:hover:not(:disabled) { background: var(--blue); }
+.validate-btn:disabled { opacity: 0.35; cursor: default; }
 
 /* EXPLANATION */
 .explanation {
