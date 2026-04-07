@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProgressBar from '../components/ProgressBar.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout
@@ -9,12 +10,12 @@ import ProgressBar from '../components/ProgressBar.astro';
 >
   <header class="exam-header">
     <div class="exam-header-left">
-      <a href="/" class="exam-back-link">Retour aux modules</a>
+      <a href={`${base}/`} class="exam-back-link">Retour aux modules</a>
       <h1>QuizAssurance · Simulation F-135</h1>
       <p>100 questions · 50 courtes · 50 mises en situation · minuterie active</p>
     </div>
     <div class="exam-header-actions">
-      <a href="/quiz" class="exam-ghost-link">Mode entrainement</a>
+      <a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/quiz`} class="exam-ghost-link">Mode entrainement</a>
       <div class="timer-pill" id="examTimer">90:00</div>
     </div>
   </header>
@@ -108,7 +109,7 @@ import ProgressBar from '../components/ProgressBar.astro';
 
       <div class="results-actions">
         <button class="start-exam-btn" id="restartExamBtn">Recommencer la simulation</button>
-        <a href="/quiz" class="exam-ghost-link results-link">Retour au mode entrainement</a>
+        <a href={`${base}/quiz`} class="exam-ghost-link results-link">Retour au mode entrainement</a>
       </div>
 
       <div class="review-list" id="reviewList"></div>

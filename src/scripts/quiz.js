@@ -12,7 +12,7 @@ function getStats() {
   const correct = Object.values(answered).filter(v => v).length;
   const wrong = total - correct;
   const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
-  return { total, correct, wrong, pct, remaining: 100 - total };
+  return { total, correct, wrong, pct, remaining: questions.length - total };
 }
 
 function updateStats() {
