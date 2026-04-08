@@ -3,13 +3,72 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
+const formations = [
+  {
+    title: 'Déontologie et pratique professionnelle',
+    desc: 'Approfondissez les obligations déontologiques du représentant en assurance de dommages et les meilleures pratiques professionnelles.',
+    credits: 3,
+    category: 'Conformité',
+    duration: '3 heures',
+    price: 89,
+    available: false,
+  },
+  {
+    title: 'Nouveautés législatives et réglementaires',
+    desc: 'Mise à jour sur les récentes modifications législatives et réglementaires en assurance de dommages au Québec.',
+    credits: 2,
+    category: 'Réglementation',
+    duration: '2 heures',
+    price: 69,
+    available: false,
+  },
+  {
+    title: 'Cybersécurité et protection des renseignements personnels',
+    desc: 'Comprenez les risques liés à la cybersécurité et les obligations en matière de protection des données dans le secteur de l\'assurance.',
+    credits: 2,
+    category: 'Technologie',
+    duration: '2 heures',
+    price: 69,
+    available: false,
+  },
+  {
+    title: 'Gestion des sinistres complexes',
+    desc: 'Techniques avancées pour la gestion de sinistres complexes : expertise, évaluation et règlement.',
+    credits: 3,
+    category: 'Sinistres',
+    duration: '3 heures',
+    price: 89,
+    available: false,
+  },
+  {
+    title: 'Assurance et changements climatiques',
+    desc: 'Impacts des changements climatiques sur l\'industrie de l\'assurance : risques émergents, tarification et adaptation.',
+    credits: 2,
+    category: 'Tendances',
+    duration: '2 heures',
+    price: 69,
+    available: false,
+  },
+  {
+    title: 'Communication et relation client',
+    desc: 'Améliorez vos compétences en communication pour mieux conseiller et fidéliser vos clients en assurance.',
+    credits: 1,
+    category: 'Compétences',
+    duration: '1 heure',
+    price: 49,
+    available: false,
+  },
+];
+
 const modules = [
   {
     code: 'F-135',
     title: 'Droit de l\'assurance',
     desc: 'Agent et courtier en assurance de dommages · Expert en sinistre',
-    topics: ['Contrat', 'Obligations', 'Parties', 'Sinistre', 'Résiliation', 'LDPSF'],
-    questions: 100,
+    topics: ['Analyse de contrat', 'Obligations de l\'assuré', 'Gestion de sinistre', 'Résiliation et recours', 'Conformité LDPSF'],
+    questions: '100 questions · QCM et mises en situation',
+    price: 0,
+    includes: 'Accès illimité · Simulations d\'examen · Explications détaillées',
     available: true,
     href: `${base}/quiz`,
     examHref: `${base}/f-135-examen`,
@@ -18,28 +77,61 @@ const modules = [
     code: 'F-411',
     title: 'Assurance de biens et responsabilité civile des particuliers',
     desc: 'Agent et courtier en assurance de dommages',
-    topics: ['Habitation', 'Responsabilité civile', 'Biens personnels', 'Exclusions'],
-    questions: 100,
+    topics: ['Couverture habitation', 'Évaluation du risque RC', 'Exclusions et avenants', 'Règlement de sinistre'],
+    questions: '100 questions · QCM et mises en situation',
+    price: 29,
+    includes: 'Accès illimité · Simulations d\'examen · Explications détaillées',
     available: false,
+    badge: 'Été 2026',
     href: `${base}/f-411`,
-  },
-  {
-    code: 'F411-T3 / F511-T3',
-    title: 'Assurance de biens et RC des particuliers',
-    desc: 'Agent et courtier en assurance de dommages · Expert en sinistre',
-    topics: ['Expertise en sinistre', 'Évaluation des dommages', 'RC particuliers'],
-    questions: 100,
-    available: false,
-    href: `${base}/f411-t3`,
   },
   {
     code: 'F-412',
     title: 'Assurance automobile',
     desc: 'Agent et courtier en assurance de dommages',
-    topics: ['Assurance auto', 'SAAQ', 'Chapitres A & B', 'Responsabilité'],
-    questions: 100,
+    topics: ['Chapitres A & B en détail', 'Régime public SAAQ', 'Calcul d\'indemnité', 'Responsabilité et recours'],
+    questions: '100 questions · QCM et mises en situation',
+    price: 29,
+    includes: 'Accès illimité · Simulations d\'examen · Explications détaillées',
     available: false,
+    badge: 'Automne 2026',
     href: `${base}/f-412`,
+  },
+  {
+    code: 'F-511',
+    title: 'Courtage en assurance de dommages des particuliers',
+    desc: 'Courtier en assurance de dommages',
+    topics: ['Pratique du courtage', 'Analyse des besoins client', 'Comparaison de produits', 'Déontologie du courtier'],
+    questions: '100 questions · QCM et mises en situation',
+    price: 29,
+    includes: 'Accès illimité · Simulations d\'examen · Explications détaillées',
+    available: false,
+    badge: 'Automne 2026',
+    href: '#',
+  },
+  {
+    code: 'F-220',
+    title: 'Assurance de dommages des entreprises',
+    desc: 'Agent et courtier en assurance de dommages',
+    topics: ['Risques commerciaux', 'RC professionnelle', 'Pertes d\'exploitation', 'Montage de programme'],
+    questions: '100 questions · QCM et mises en situation',
+    price: 29,
+    includes: 'Accès illimité · Simulations d\'examen · Explications détaillées',
+    available: false,
+    badge: 'Hiver 2027',
+    href: '#',
+  },
+  {
+    code: 'Cautionnement',
+    title: 'Le cautionnement',
+    desc: 'Agent et courtier en assurance de dommages',
+    topics: ['Distinction assurance vs cautionnement', 'Cautionnement de soumission', 'Cautionnement d\'exécution', 'Obligations tripartites'],
+    questions: '100 questions · QCM et mises en situation',
+    price: 29,
+    includes: 'Accès illimité · Simulations d\'examen · Explications détaillées',
+    available: false,
+    badge: 'Hiver 2027',
+    href: '#',
   },
 ];
 ---
@@ -80,7 +172,7 @@ const modules = [
             <span class="module-code">{m.code}</span>
             {m.available
               ? <span class="module-badge ready">Disponible</span>
-              : <span class="module-badge soon">Bientôt</span>
+              : <span class="module-badge soon">{m.badge}</span>
             }
           </div>
           <h2 class="module-title">{m.title}</h2>
@@ -88,8 +180,15 @@ const modules = [
           <div class="module-topics">
             {m.topics.map(t => <span class="topic-chip">{t}</span>)}
           </div>
+          <div class="module-price-row">
+            {m.price === 0
+              ? <span class="module-price free">Gratuit</span>
+              : <span class="module-price">{m.price}&nbsp;$</span>
+            }
+            <span class="module-includes">{m.includes}</span>
+          </div>
           <div class="module-footer">
-            <span class="module-count">{m.questions} questions</span>
+            <span class="module-count">{m.questions}</span>
             {m.available
               ? (
                 <div class="module-actions">
@@ -105,12 +204,53 @@ const modules = [
                 </div>
               )
               : (
-                <span class="module-btn-disabled">En construction</span>
+                <span class="module-btn-presale">Prévente</span>
               )
             }
           </div>
         </div>
       ))}
+    </section>
+
+    <!-- FORMATION CONTINUE / UFC -->
+    <section class="ufc-section">
+      <div class="ufc-header">
+        <p class="ufc-eyebrow">Formation continue</p>
+        <h2 class="ufc-heading">
+          Obtenez vos<br />
+          <span class="ufc-heading-gold">crédits UFC</span>
+        </h2>
+        <p class="ufc-sub">
+          Formations reconnues par l'Autorité des marchés financiers (AMF) pour accumuler
+          vos unités de formation continue obligatoires en assurance de dommages.
+        </p>
+      </div>
+
+      <div class="ufc-grid">
+        {formations.map(f => (
+          <div class={`ufc-card${f.available ? ' ufc-available' : ' ufc-locked'}`}>
+            <div class="ufc-card-top">
+              <span class="ufc-category">{f.category}</span>
+              <span class="ufc-credits">{f.credits} UFC</span>
+            </div>
+            <h3 class="ufc-card-title">{f.title}</h3>
+            <p class="ufc-card-desc">{f.desc}</p>
+            <div class="ufc-price-row">
+              <span class="ufc-price">{f.price}&nbsp;$</span>
+            </div>
+            <div class="ufc-card-footer">
+              <span class="ufc-duration">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                {f.duration}
+              </span>
+              {f.available
+                ? <a href="#" class="ufc-btn">Commencer</a>
+                : <span class="ufc-btn-disabled">Bientôt disponible</span>
+              }
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
 
     <!-- FOOTER -->
@@ -190,9 +330,9 @@ const modules = [
   /* MODULE GRID */
   .modules-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    max-width: 960px;
+    max-width: 1100px;
     margin: 48px auto 0;
     padding: 0 32px 64px;
     width: 100%;
@@ -216,7 +356,6 @@ const modules = [
   }
   .module-card.locked {
     background: rgba(255,255,255,0.02);
-    opacity: 0.7;
   }
 
   .module-top {
@@ -245,9 +384,9 @@ const modules = [
     border: 1px solid rgba(45,122,79,0.4);
   }
   .module-badge.soon {
-    background: rgba(255,255,255,0.06);
-    color: rgba(255,255,255,0.4);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(201,168,76,0.1);
+    color: var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.2);
   }
 
   .module-title {
@@ -281,6 +420,26 @@ const modules = [
     background: rgba(201,168,76,0.08);
     color: rgba(201,168,76,0.7);
     border-color: rgba(201,168,76,0.15);
+  }
+
+  .module-price-row {
+    margin-top: 4px;
+  }
+  .module-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .module-price.free {
+    color: #6ee4a0;
+  }
+  .module-includes {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.35);
+    margin-top: 4px;
+    line-height: 1.4;
   }
 
   .module-footer {
@@ -332,6 +491,21 @@ const modules = [
     color: rgba(255,255,255,0.2);
     font-style: italic;
   }
+  .module-btn-presale {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 50px;
+    background: transparent;
+    color: var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.3);
+    letter-spacing: 0.02em;
+    cursor: default;
+  }
 
   /* FOOTER */
   .landing-footer {
@@ -346,7 +520,166 @@ const modules = [
     letter-spacing: 0.04em;
   }
 
+  /* UFC SECTION */
+  .ufc-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+    width: 100%;
+  }
+  .ufc-header {
+    text-align: center;
+    padding: 48px 0 40px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .ufc-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .ufc-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .ufc-heading-gold { color: var(--gold); }
+  .ufc-sub {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.5);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .ufc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .ufc-card {
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .ufc-card.ufc-locked {
+    background: rgba(255,255,255,0.02);
+    opacity: 0.75;
+  }
+  .ufc-card.ufc-available {
+    background: rgba(201,168,76,0.05);
+    border-color: rgba(201,168,76,0.25);
+  }
+  .ufc-card.ufc-available:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+  }
+
+  .ufc-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ufc-category {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .ufc-credits {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(201,168,76,0.12);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .ufc-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+  }
+  .ufc-card-desc {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .ufc-price-row {
+    margin-top: 4px;
+  }
+  .ufc-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .ufc-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .ufc-duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.3);
+    font-weight: 500;
+  }
+  .ufc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .ufc-btn:hover { background: var(--gold-light); }
+  .ufc-btn-disabled {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.2);
+    font-style: italic;
+  }
+
   /* RESPONSIVE */
+  @media (max-width: 960px) {
+    .modules-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
   @media (max-width: 680px) {
     .modules-grid {
       grid-template-columns: 1fr;
@@ -362,5 +695,7 @@ const modules = [
     }
     .hero { padding: 48px 24px 32px; }
     .landing-nav { padding: 16px 20px; }
+    .ufc-section { padding: 0 20px 48px; }
+    .ufc-grid { grid-template-columns: 1fr; }
   }
 </style>
