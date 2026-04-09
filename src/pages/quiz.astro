@@ -8,22 +8,95 @@ import FinalScreen from '../components/FinalScreen.astro';
 ---
 
 <BaseLayout title="QuizAssurance – F-135 Entrainement">
-  <QuizHeader />
-  <ProgressBar />
+  <!-- Auth gate overlay -->
+  <div id="authGate" class="auth-gate" style="display:none"></div>
 
-  <main>
-    <StatsRow />
-    <FilterBar />
+  <div id="quizContent">
+    <QuizHeader />
+    <ProgressBar />
 
-    <div id="quizContainer"></div>
+    <main>
+      <StatsRow />
+      <FilterBar />
 
-    <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
-      <button class="load-btn" id="loadMoreBtn">Charger plus de questions ▼</button>
-      <button class="reset-btn" id="resetBtn">Réinitialiser le quiz</button>
-    </div>
+      <div id="quizContainer"></div>
 
-    <FinalScreen />
-  </main>
+      <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+        <button class="load-btn" id="loadMoreBtn">Charger plus de questions ▼</button>
+        <button class="reset-btn" id="resetBtn">Réinitialiser le quiz</button>
+      </div>
+
+      <FinalScreen />
+    </main>
+  </div>
+
+  <script>
+    import { onAuth } from '../scripts/firebase.js';
+    import { hasPurchased, handlePaymentReturn } from '../scripts/stripe.js';
+
+    const MODULE_CODE = 'F-135';
+    const params = new URLSearchParams(window.location.search);
+    const isTrial = params.get('trial') === '1';
+
+    // Handle Stripe redirect
+    handlePaymentReturn(MODULE_CODE);
+
+    onAuth((user: any) => {
+      const gate = document.getElementById('authGate');
+      const content = document.getElementById('quizContent');
+
+      if (isTrial) {
+        // Trial mode: no auth needed
+        if (gate) gate.style.display = 'none';
+        if (content) content.style.display = '';
+        return;
+      }
+
+      if (!user) {
+        if (gate) {
+          gate.style.display = 'flex';
+          gate.innerHTML = `
+            <div class="gate-card">
+              <h2>Connexion requise</h2>
+              <p>Connectez-vous avec votre compte Google pour accéder au quiz F-135.</p>
+              <button class="gate-btn gate-btn-google" id="gateLoginBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.9 33.5 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6 29.3 4 24 4 12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20c0-1.3-.15-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.3 15.2 18.8 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.2 26.7 36 24 36c-5.3 0-9.8-3.5-11.3-8.3l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C36.7 39.3 44 34 44 24c0-1.3-.15-2.6-.4-3.9z"/></svg>
+                Connexion avec Google
+              </button>
+              <a href="${import.meta.env.BASE_URL.replace(/\/$/, '')}/quiz?trial=1" class="gate-btn gate-btn-trial">Essai gratuit (10 questions)</a>
+            </div>
+          `;
+          document.getElementById('gateLoginBtn')?.addEventListener('click', async () => {
+            const { loginWithGoogle } = await import('../scripts/firebase.js');
+            try { await loginWithGoogle(); } catch(e) { /* popup closed */ }
+          });
+        }
+        if (content) content.style.display = 'none';
+      } else if (!hasPurchased(MODULE_CODE)) {
+        if (gate) {
+          gate.style.display = 'flex';
+          gate.innerHTML = `
+            <div class="gate-card">
+              <h2>Accès au quiz F-135</h2>
+              <p>Bienvenue, <strong>${user.displayName || user.email}</strong>!</p>
+              <p>Débloquez l'accès complet aux 100 questions pour <strong>29 $</strong>.</p>
+              <a href="#" class="gate-btn gate-btn-pay" id="gatePayBtn">Acheter l'accès complet</a>
+              <a href="${import.meta.env.BASE_URL.replace(/\/$/, '')}/quiz?trial=1" class="gate-btn gate-btn-trial">Essai gratuit (10 questions)</a>
+            </div>
+          `;
+          import('../scripts/stripe.js').then(({ getPaymentUrl }) => {
+            const payBtn = document.getElementById('gatePayBtn') as HTMLAnchorElement | null;
+            if (payBtn) payBtn.href = getPaymentUrl(MODULE_CODE, user.uid) || '#';
+          });
+        }
+        if (content) content.style.display = 'none';
+      } else {
+        // Authenticated + purchased
+        if (gate) gate.style.display = 'none';
+        if (content) content.style.display = '';
+      }
+    });
+  </script>
 
   <script>
     import '../scripts/quiz.js';

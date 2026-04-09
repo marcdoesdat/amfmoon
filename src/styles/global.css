@@ -23,6 +23,141 @@ body {
 }
 
 /* HEADER */
+
+/* TRIAL BANNER */
+.trial-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(45,122,79,0.1);
+  border: 1px solid rgba(45,122,79,0.3);
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.trial-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: var(--correct);
+  color: var(--white);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.trial-text {
+  font-size: 0.85rem;
+  color: var(--navy);
+}
+.trial-text a {
+  color: var(--correct);
+  font-weight: 600;
+  text-decoration: none;
+}
+.trial-text a:hover {
+  text-decoration: underline;
+}
+
+/* AUTH GATE */
+.auth-gate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  background: var(--cream);
+  padding: 40px 20px;
+}
+.gate-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+.gate-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.gate-card p {
+  font-size: 0.9rem;
+  color: var(--gray);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.gate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+  border: none;
+}
+.gate-btn-google {
+  background: var(--navy);
+  color: var(--white);
+}
+.gate-btn-google:hover {
+  background: var(--blue);
+}
+.gate-btn-pay {
+  background: var(--gold);
+  color: var(--navy);
+}
+.gate-btn-pay:hover {
+  background: var(--gold-light);
+}
+.gate-btn-trial {
+  background: transparent;
+  color: var(--navy);
+  border: 1.5px solid var(--border);
+}
+.gate-btn-trial:hover {
+  border-color: var(--navy);
+  background: #f0f4f8;
+}
+
+/* DYNAMIC BUY BUTTON (injected by auth-ui.js) */
+.module-btn-buy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0 20px;
+  height: 40px;
+  width: 100%;
+  border: 2px solid var(--gold);
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+  box-sizing: border-box;
+}
+.module-btn-buy:hover {
+  background: var(--gold-light);
+  border-color: var(--gold-light);
+}
+
 header {
   background: var(--navy);
   padding: 24px 32px;
