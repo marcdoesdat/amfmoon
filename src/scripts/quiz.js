@@ -1,8 +1,16 @@
 import { ALL_QUESTIONS } from '../data/questions.js';
 
+// TRIAL MODE
+const urlParams = new URLSearchParams(window.location.search);
+const isTrial = urlParams.get('trial') === '1';
+const TRIAL_LIMIT = 10;
+
 // STATE
-let questions = [...ALL_QUESTIONS];
-let visibleCount = 15;
+let questions = isTrial
+  ? [...ALL_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, TRIAL_LIMIT)
+  : [...ALL_QUESTIONS];
+const totalQuestions = questions.length;
+let visibleCount = isTrial ? TRIAL_LIMIT : 15;
 let answered = {};  // { qid: true|false }  – validated answers
 let selected = {};  // { qid: chosenIndex } – pending selection, not yet validated
 let currentFilter = 'all';
@@ -12,7 +20,7 @@ function getStats() {
   const correct = Object.values(answered).filter(v => v).length;
   const wrong = total - correct;
   const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
-  return { total, correct, wrong, pct, remaining: questions.length - total };
+  return { total, correct, wrong, pct, remaining: totalQuestions - total };
 }
 
 function updateStats() {
@@ -22,7 +30,7 @@ function updateStats() {
   document.getElementById('statWrong').textContent = s.wrong;
   document.getElementById('statRemaining').textContent = s.remaining;
   document.getElementById('headerScore').textContent = s.pct + '%';
-  document.getElementById('progressBar').style.width = ((s.total / 100) * 100) + '%';
+  document.getElementById('progressBar').style.width = ((s.total / totalQuestions) * 100) + '%';
 }
 
 function getFiltered() {
@@ -92,7 +100,9 @@ function renderQuestions() {
 
   const total = getFiltered().length;
   const loadWrap = document.getElementById('loadMoreWrap');
-  if (visibleCount < total) {
+  if (isTrial) {
+    loadWrap.style.display = 'none';
+  } else if (visibleCount < total) {
     loadWrap.style.display = 'block';
     document.getElementById('loadMoreBtn').textContent = `Charger plus (${Math.min(15, total - visibleCount)} suivantes) ▼`;
   } else {
@@ -101,7 +111,7 @@ function renderQuestions() {
     if (btn) btn.style.display = 'none';
   }
 
-  if (Object.keys(answered).length === 100) showFinalScreen();
+  if (Object.keys(answered).length === totalQuestions) showFinalScreen();
 }
 
 // Step 1: select an option (no reveal yet)
@@ -147,7 +157,10 @@ function showFinalScreen() {
   screen.classList.add('visible');
   document.getElementById('finalScoreBig').textContent = s.pct + '%';
   let medal = '🏆', msg = '';
-  if (s.pct === 100) { medal = '🌟'; msg = "Score parfait! Vous êtes prêt(e) pour l'examen AMF F-135."; }
+  if (isTrial) {
+    medal = s.pct >= 70 ? '🎯' : '📚';
+    msg = `Essai terminé! Votre score : ${s.pct}%. Débloquez les ${ALL_QUESTIONS.length} questions pour une préparation complète.`;
+  } else if (s.pct === 100) { medal = '🌟'; msg = "Score parfait! Vous êtes prêt(e) pour l'examen AMF F-135."; }
   else if (s.pct >= 90) { medal = '🥇'; msg = 'Excellent! Quelques points à peaufiner mais vous êtes très bien préparé(e).'; }
   else if (s.pct >= 75) { medal = '🥈'; msg = 'Bon résultat! Révisez les questions manquées et vous serez prêt(e).'; }
   else if (s.pct >= 60) { medal = '🥉'; msg = 'Résultat passable. Des révisions supplémentaires sont recommandées.'; }
@@ -186,5 +199,21 @@ document.getElementById('loadMoreBtn').addEventListener('click', function() {
 document.getElementById('resetBtn').addEventListener('click', window.resetAll);
 
 // INIT
+if (isTrial) {
+  // Hide filters in trial mode
+  const filterBar = document.querySelector('.filter-bar');
+  if (filterBar) filterBar.style.display = 'none';
+
+  // Show trial banner
+  const banner = document.createElement('div');
+  banner.className = 'trial-banner';
+  banner.innerHTML = `
+    <span class="trial-badge">ESSAI GRATUIT</span>
+    <span class="trial-text">${TRIAL_LIMIT} questions aléatoires · <a href="${window.location.pathname}">Débloquer les ${ALL_QUESTIONS.length} questions →</a></span>
+  `;
+  const main = document.querySelector('main');
+  if (main) main.insertBefore(banner, main.firstChild);
+}
+
 updateStats();
 renderQuestions();
