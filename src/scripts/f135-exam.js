@@ -29,6 +29,31 @@ let finished = false;
 const draftSelections = {};
 const responses = {};
 
+const STORAGE_KEY = 'f135_exam_state';
+
+function saveState() {
+  if (!started || finished) return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    currentIndex,
+    remainingSeconds,
+    draftSelections,
+    responses,
+  }));
+}
+
+function clearState() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+function loadSavedState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 function getStats() {
   const answeredCount = Object.keys(responses).length;
   const correctCount = Object.values(responses).filter((response) => response.correct).length;
@@ -217,6 +242,7 @@ function finishExam(autoSubmitted = false) {
 
   finished = true;
   window.clearInterval(timerId);
+  clearState();
 
   document.getElementById('examShell').style.display = 'none';
   document.getElementById('examResults').style.display = 'block';
@@ -239,8 +265,11 @@ function finishExam(autoSubmitted = false) {
   renderReview();
 }
 
-function startExam() {
-  if (started) return;
+function resumeExam(saved) {
+  currentIndex = saved.currentIndex ?? 0;
+  remainingSeconds = saved.remainingSeconds ?? durationSeconds;
+  Object.assign(draftSelections, saved.draftSelections ?? {});
+  Object.assign(responses, saved.responses ?? {});
 
   started = true;
   document.getElementById('examIntro').style.display = 'none';
@@ -255,11 +284,40 @@ function startExam() {
     if (remainingSeconds <= 0) {
       remainingSeconds = 0;
       updateTimerDisplay();
+      clearState();
       finishExam(true);
       return;
     }
 
     updateTimerDisplay();
+    saveState();
+  }, 1000);
+}
+
+function startExam() {
+  if (started) return;
+
+  clearState();
+  started = true;
+  document.getElementById('examIntro').style.display = 'none';
+  document.getElementById('examShell').style.display = 'block';
+
+  updateDashboard();
+  renderQuestion();
+
+  timerId = window.setInterval(() => {
+    remainingSeconds -= 1;
+
+    if (remainingSeconds <= 0) {
+      remainingSeconds = 0;
+      updateTimerDisplay();
+      clearState();
+      finishExam(true);
+      return;
+    }
+
+    updateTimerDisplay();
+    saveState();
   }, 1000);
 }
 
@@ -282,6 +340,7 @@ window.validateExamAnswer = function validateExamAnswer(questionId) {
     correct: chosenIndex === question.ans,
   };
 
+  saveState();
   updateDashboard();
 
   if (currentIndex < totalQuestions - 1) {
@@ -314,5 +373,32 @@ document.getElementById('nextBtn').addEventListener('click', () => {
     updateDashboard();
   }
 });
+
+// Restore saved session if one exists
+const savedState = loadSavedState();
+if (savedState && savedState.remainingSeconds > 0) {
+  const answeredCount = Object.keys(savedState.responses ?? {}).length;
+  const minutesLeft = Math.floor(savedState.remainingSeconds / 60);
+  const secondsLeft = savedState.remainingSeconds % 60;
+  const timeLeft = `${String(minutesLeft).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
+
+  const introCard = document.querySelector('.intro-card');
+  const resumeBanner = document.createElement('div');
+  resumeBanner.className = 'resume-banner';
+  resumeBanner.innerHTML = `
+    <p class="resume-info">Session en cours — ${answeredCount} question${answeredCount !== 1 ? 's' : ''} repondue${answeredCount !== 1 ? 's' : ''}, ${timeLeft} restant</p>
+    <div class="resume-actions">
+      <button class="start-exam-btn" id="resumeExamBtn">Reprendre la simulation</button>
+      <button class="resume-new-btn" id="newExamBtn">Nouvelle simulation</button>
+    </div>
+  `;
+  introCard.appendChild(resumeBanner);
+
+  document.getElementById('resumeExamBtn').addEventListener('click', () => resumeExam(savedState));
+  document.getElementById('newExamBtn').addEventListener('click', () => {
+    clearState();
+    resumeBanner.remove();
+  });
+}
 
 updateTimerDisplay();
